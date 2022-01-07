@@ -29,6 +29,14 @@ export async function getStaticProps(context) {
   const jsonData = await fs.readFile(filePath); // asycn zwraca promise
   const data = JSON.parse(jsonData);
 
+  if(!data){
+    return {
+      redirect: {
+        destination: '/no-data' //obiekt ze ścieżką
+      }
+    }
+  }
+
   if (data.products.lenght === 0){
     return {notFound: true};
   }
@@ -40,6 +48,7 @@ export async function getStaticProps(context) {
     // INCREMENTAL STATIC GENERATION ISR przy informacji z npm run build
     revalidate: 10, // co 10 sekund; ale serwerze developerskim zawsze się uruhamia, ZNACZENIE NA PRODUKCJI
     notFound: true, // jak tru o zwóic 404 azmiast nowej strony; rpzdayne przy błedzie pobierania danych
+    redirect: "/",//redirect user to another page/route; np gdy był problem połaczenia sie z baza danych
   };
 }
 

@@ -46,6 +46,14 @@ export async function getStaticProps(context) {
   // filtrowanie żeby dostać konkrenty produkt
   const product = data.products.find((product) => product.id === productId);
 
+  //   Unhandled Runtime Error
+  // Error: Failed to load static props
+  // bo komponent nie ma props jak nie znaleziono danych dla nieistniejacego id, wiec nawet sprawdzenie w komponencie i loading... nie pomoże
+  if (!product) { //żeby 404 error page
+    // walidacja danych gdy produktu nie znaleziono
+    return { notFound: true }; //dizęki temu można użyć fallback:tru i dalej próbować znaleźc nie prerendering pages
+  }
+
   return {
     props: {
       loadedProduct: product, // dane do propsów komponentu

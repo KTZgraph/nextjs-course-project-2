@@ -22,8 +22,8 @@ export async function getServerSideProps(context) { //tylko na serwerze na żywo
     //res nie trzeba sie przejmować bo nextjs zwróci komponent, ale można manipulować response
     //req reach the server headers, cookie
     //req i res sa defaultowe Nodejs obiekty
-    console.log(req); //do autentykacji potrzebne
-    console.log(res);
+    // console.log(req); //do autentykacji potrzebne
+    // console.log(res);
 
   // zwrotka - obiekt taka sama struktura jak getStaticProps - ma props, i moze mieć klucze redirect, notFound
 

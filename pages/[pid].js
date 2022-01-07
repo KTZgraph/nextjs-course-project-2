@@ -38,4 +38,19 @@ export async function getStaticProps(context) {
   };
 }
 
+export async function getStaticPaths() {
+  //informacja ile konkretnie stron ma pregenerated
+  return {
+    //zwraca obiekt z atrybutem paths którego wartością jest lista boiektów
+    paths: [
+      //getStaticProps będzie uruchominiona tyle razy ile jest różnych obiektów
+      //konkretnei które instancje stron mają być wcześniej wyrenderowane
+      { params: { pid: "p1" } },
+      { params: { pid: "p2" } },
+      { params: { pid: "p3" } },
+    ],
+    fallback: false,
+  };
+}
+
 export default ProductDetailPage;

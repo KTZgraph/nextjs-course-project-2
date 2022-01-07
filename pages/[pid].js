@@ -32,6 +32,12 @@ async function getData() {
   return data;
 }
 
+
+/*************************** STATIC GENERATION [npm run build] i [revalidated ***************************/
+//STATIC GENERATION nawet z sekundowym odświeżaneime - poniższe funkcje nie maja to actual request becausse that functions are not called for the actual request
+// at least not only; with incremental static generation sa wywołowane z incoming request at leas sometimes if they need to be revalidated
+// generalnie są wywoływane gdy projekt jest budowany 
+//czyli nie ma własciwego dostępu do nadchodzących requestów, czesto takie dostepu nie trzbea np tutaj dla pojedycznego produktu
 export async function getStaticProps(context) {
   // tutaj ważny parametr context
   // pobieranie informacji o jdenym produkcie
@@ -61,7 +67,7 @@ export async function getStaticProps(context) {
   };
 }
 
-export async function getStaticPaths() {
+export async function getStaticPaths() { //współracuje z getStaticProps wymaga dla wszsytkich dynamiczny [jakiesId].js plików
   const data = await getData();
 
   const ids = data.products.map((product) => product.id); // tylko lista z idkami

@@ -7,8 +7,9 @@
 import { useEffect, useState } from "react";
 import useSWR from "swr";
 
+/************************ pobieranie danych po stronie klienta *************************** */
 function LastSalesPage() {
-    const [sales, setSales] = useState(); //domyslnie undefined bo nie mamy żadnych sprzedaży
+  const [sales, setSales] = useState(); //domyslnie undefined bo nie mamy żadnych sprzedaży
   //   const [isLoading, setIsLoading] = useState(false); //spinner jak czekamy na dane
 
   const { data, error } = useSWR(
@@ -16,8 +17,10 @@ function LastSalesPage() {
   ); //drugi rgument to defaulotoo fetch wbudowany
 
   //teraz useEffect tylko żeby zmienić dane z firebasa(obiekt) na listę
+
   useEffect(() => {
     if (data) {
+      console.log("TUUUUUUUUUUUUUUUUUU");
       //jesli mamy dane
       const transformedSales = [];
       //pętlą buduję Array
@@ -28,10 +31,10 @@ function LastSalesPage() {
           volume: data[key].volume,
         });
       }
-      setSales(transformedSales)
+      console.log(transformedSales);
+      setSales(transformedSales);
     }
-  }),
-    [data];
+  }, [data]);
 
   //typowo Reactowe wysyłanie requesta
   //   useEffect(() => { //wykona się dopiero po wyrenderowanie JSX to mogą być błedy w komponencie że nie ma danych
@@ -72,7 +75,6 @@ function LastSalesPage() {
     return <p> Loading ...</p>;
   }
 
-
   //   if(!sales){
   //       return <p>No data yet...</p> //initial state of the page i to jest prerenderowane przez nextjs ale bez danych, bo dane są pobrane po stronie klienta
   //   }
@@ -86,6 +88,34 @@ function LastSalesPage() {
       ))}
     </ul>
   );
+}
+
+// mieszanie żey prerender jakiś widok
+export async function getStaticProps() {
+  //nie można użyć tutja webHooków - trzeba standarodowo fetcha napisać
+  //   fetch trzeba zwrócić; alternatywnie można użyć await
+//   const response = await fetch("https://nextjs-course-28060-default-rtdb.firebaseio.com/sales.json") 
+//const data = await response.json()
+
+  return fetch(
+    "https://nextjs-course-28060-default-rtdb.firebaseio.com/sales.json"
+  ) //jako dummy backend
+    .then((response) => response.json()) //znowu zwraca promise
+    .then((data) => {
+      const transformedSales = [];
+
+      //pętlą buduję Array
+      for (const key in data) {
+        transformedSales.push({
+          id: key,
+          username: data[key].username,
+          volume: data[key].volume,
+        });
+      }
+
+      //getStaticProps jest asynchroniczna i zwraca promisa, ale fetch też zwraca promisa to go tutaj zwracam
+      return { props: { sales: transformedSales }, revalidate: 10 }; // odświeżanie co 10sekund po deploymencie
+    });
 }
 
 export default LastSalesPage;

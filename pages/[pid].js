@@ -6,12 +6,12 @@ function ProductDetailPage(props) {
   // destruktuzryzacja
   const { loadedProduct } = props;
 
-//   fallback: true sprawdzenie danych czy na pewno nje tutuaj mamy
-    if(!loadedProduct){ //react sam zacviąga dane
-        // teraz sobie zaciąga dane - user widzi chwilke opóźnienia ale przynajmnie nie błąd!
-        // trochę podobne do standardowego reactowego useEffect,s setState
-        return <p>Loading...</p>
-    }
+//   fallback: true sprawdzenie danych czy na pewno nje tutuaj mamy ale dla [fallback: 'blocking',] ten kod NIE POTRZEBNY
+    // if(!loadedProduct){ //react sam zacviąga dane
+    //     // teraz sobie zaciąga dane - user widzi chwilke opóźnienia ale przynajmnie nie błąd!
+    //     // trochę podobne do standardowego reactowego useEffect,s setState
+    //     return <p>Loading...</p>
+    // }
 
   return (
     <Fragment>
@@ -57,13 +57,17 @@ export async function getStaticPaths() {
       //   { params: { pid: "p2" } },
       //   { params: { pid: "p3" } },
     ],
-    fallback: true, //pomaga gdy jest wieele stron do prerenderowania; jak się ma jak amazon milion produktów to może się okazać
+    // fallback: true, //pomaga gdy jest wieele stron do prerenderowania; jak się ma jak amazon milion produktów to może się okazać
     // że prerenderowanie tak wielu produktów moż nie być wcale obtymalne; ale prerenderowanie miliona stron moze zajac baaardzo długo
     // mogą byc produkty ktore są rzadko używane/albo wpisy na blogu które są nigdy nie przeczytane; prerenderowanie takich stron jest stratą czasu i zasobów
     // tutj [fallback] jest przydatne, np fallback: true mówi o prerenderowanie tylko niektórych stron, a o reszczie gdy jest true 
     // to mówimy że mają być renderowanie na żadanie odwiedzenia, nie sa to strony prerenderowane ale wyrenderowane w momencie kiedy request idzie do serwera
     //ale jak ktoś wpisze w urla http://localhost:3000/p3 a  nie się przeklika to trzeba być przygotowanym na fallback z komponentu reacta
     //  TypeError: Cannot read property 'title' of undefined
+
+    // alternatywa dla fallback: true,
+    fallback: 'blocking', //nextja teraz czeka aż strona będzie w pełni prerenderowana na serwerze before is serwe that
+    // trochę dłuzej dla usera ale odpowiedź będzie wysłana
   };
 }
 

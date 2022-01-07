@@ -56,14 +56,12 @@ export async function getStaticPaths() {
   const data = await getData();
 
   const ids = data.products.map(product => product.id); // tylko lista z idkami
-  
   const pathsWithParams = ids.map(id => ({params: {pid: id}})) //zmapowanie, zeby to był alista obiektów jak paths wymaga
 
   //informacja ile konkretnie stron ma pregenerated
   return {
-    paths: pathsWithParams,
-    // alternatywa dla fallback: true,
-    fallback: "blocking",
+    paths: pathsWithParams, //wszystkie strony są pregenerowane
+    falback: false, // bo wszsytkie strony i tak przerednerowane wczesniej
   };
 }
 

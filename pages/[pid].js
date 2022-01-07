@@ -6,12 +6,14 @@ function ProductDetailPage(props) {
   // destruktuzryzacja
   const { loadedProduct } = props;
 
-  //   fallback: true sprawdzenie danych czy na pewno nje tutuaj mamy ale dla [fallback: 'blocking',] ten kod NIE POTRZEBNY
-  // if(!loadedProduct){ //react sam zacviąga dane
-  //     // teraz sobie zaciąga dane - user widzi chwilke opóźnienia ale przynajmnie nie błąd!
-  //     // trochę podobne do standardowego reactowego useEffect,s setState
-  //     return <p>Loading...</p>
-  // }
+  // fallback: true sprawdzenie danych czy na pewno nje tutuaj mamy ale dla [fallback: 'blocking',] ten kod NIE POTRZEBNY
+  if (!loadedProduct) {
+    //react sam zacviąga dane
+    // MUSI BYC JAK fallback:true
+    // teraz sobie zaciąga dane - user widzi chwilke opóźnienia ale przynajmnie nie błąd!
+    // trochę podobne do standardowego reactowego useEffect,s setState
+    return <p>Loading...</p>;
+  }
 
   return (
     <Fragment>
@@ -51,17 +53,16 @@ export async function getStaticProps(context) {
   };
 }
 
-
 export async function getStaticPaths() {
   const data = await getData();
 
-  const ids = data.products.map(product => product.id); // tylko lista z idkami
-  const pathsWithParams = ids.map(id => ({params: {pid: id}})) //zmapowanie, zeby to był alista obiektów jak paths wymaga
+  const ids = data.products.map((product) => product.id); // tylko lista z idkami
+  const pathsWithParams = ids.map((id) => ({ params: { pid: id } })); //zmapowanie, zeby to był alista obiektów jak paths wymaga
 
   //informacja ile konkretnie stron ma pregenerated
   return {
     paths: pathsWithParams, //wszystkie strony są pregenerowane
-    falback: false, // bo wszsytkie strony i tak przerednerowane wczesniej
+    fallback: true, //nawet jeśli idvalue nie jest w liscie, to może ona stnieć
   };
 }
 

@@ -9,7 +9,7 @@ function UserProfilePage(props) {
 export default UserProfilePage;
 
 /************* SERVER SIDE RENDERING *************/
-// uruchamiane for every incoming request
+// uruchamiane for every incoming request , NIE wymaga getStaticPaths
 export async function getServerSideProps(context) { //tylko na serwerze na żywo działa
     //nie trzeba pracować z req i res ale należy wybrać  getServerSideProps jeśli chce sie miec pewnosć że to działa dla kazego przychodzącego żadania
     //nigdy nie jest statycznie prerenderowane; np przydatne gdy mamy hihly dynamic data które zmieniaja się wiele razy w ciagu 1s

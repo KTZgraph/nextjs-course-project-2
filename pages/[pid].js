@@ -6,6 +6,13 @@ function ProductDetailPage(props) {
   // destruktuzryzacja
   const { loadedProduct } = props;
 
+//   fallback: true sprawdzenie danych czy na pewno nje tutuaj mamy
+    if(!loadedProduct){ //react sam zacviąga dane
+        // teraz sobie zaciąga dane - user widzi chwilke opóźnienia ale przynajmnie nie błąd!
+        // trochę podobne do standardowego reactowego useEffect,s setState
+        return <p>Loading...</p>
+    }
+
   return (
     <Fragment>
       <h1>{loadedProduct.title}</h1>
@@ -46,10 +53,17 @@ export async function getStaticPaths() {
       //getStaticProps będzie uruchominiona tyle razy ile jest różnych obiektów
       //konkretnei które instancje stron mają być wcześniej wyrenderowane
       { params: { pid: "p1" } },
-      { params: { pid: "p2" } },
-      { params: { pid: "p3" } },
+      //   powiedzmy, że te strony ponizej są rzadko oglądane wiec ich nie prerenderuję
+      //   { params: { pid: "p2" } },
+      //   { params: { pid: "p3" } },
     ],
-    fallback: false,
+    fallback: true, //pomaga gdy jest wieele stron do prerenderowania; jak się ma jak amazon milion produktów to może się okazać
+    // że prerenderowanie tak wielu produktów moż nie być wcale obtymalne; ale prerenderowanie miliona stron moze zajac baaardzo długo
+    // mogą byc produkty ktore są rzadko używane/albo wpisy na blogu które są nigdy nie przeczytane; prerenderowanie takich stron jest stratą czasu i zasobów
+    // tutj [fallback] jest przydatne, np fallback: true mówi o prerenderowanie tylko niektórych stron, a o reszczie gdy jest true 
+    // to mówimy że mają być renderowanie na żadanie odwiedzenia, nie sa to strony prerenderowane ale wyrenderowane w momencie kiedy request idzie do serwera
+    //ale jak ktoś wpisze w urla http://localhost:3000/p3 a  nie się przeklika to trzeba być przygotowanym na fallback z komponentu reacta
+    //  TypeError: Cannot read property 'title' of undefined
   };
 }
 
